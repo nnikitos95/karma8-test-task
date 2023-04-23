@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  tests:
+    build:
+      context: .docker
+      target: base
+    working_dir: /app
+    volumes:
+      - ./src:/app
+    links:
+      - postgres-test
+    depends_on:
+      - migration-test
+      - postgres-test
+    entrypoint: ["php", "./tests/functional/run.php"]
+    environment:
+      DB: tests
+      DB_HOST: postgres-test
+  migration-test:
+    build:
+      context: .docker
+      target: base
+    working_dir: /app/migration
+    volumes:
+      - ./src/log:/app/log
+      - ./src/db:/app/db
+      - ./src/migration:/app/migration
+    links:
+      - postgres-test
+    depends_on:
+      - postgres-test
+    entrypoint: ["sh", "-c", "php init-db.php"]
+    environment:
+      DB: tests
+      DB_HOST: postgres-test
+  postgres-test:
+    image: postgres
+    environment:
+      POSTGRES_DB: tests
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5433:5432'

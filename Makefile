@@ -57,3 +57,7 @@ start-supervisord-send-email-workers: ## Start workers for checking emails
 .PHONY: supervisor-status
 supervisor-status: ## Check status of programs in supervisor
 	@docker-compose exec -it supervisor sh -c "supervisorctl status"
+
+.PHONY: run-tests
+run-tests: ## Run recreate db data and fixtures
+	@docker-compose -f docker-compose.test.yaml run tests

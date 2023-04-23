@@ -25,9 +25,15 @@ make start-supervisord-create-send-email-task
 make start-supervisord-send-email-workers
 ```
 
+Тесты
+Запустить функциональные тесты
+```bash
+make run-tests
+```
+
 TODO
 
-- Тесты
+- Юнит Тесты
 - Использовать RabbitMQ как очередь
 - Попробовать docker scale для воркеров, кронов вместо supervisor-a
 - Попробовать блокировку задачи в бд без поля воркер

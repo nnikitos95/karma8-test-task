@@ -1,7 +1,7 @@
 <?php
 
-$host = 'postgres';
-$db = 'db';
+$host = getenv('DB_HOST');
+$db = getenv('DB');
 $user = 'postgres';
 $password = 'password';
 
