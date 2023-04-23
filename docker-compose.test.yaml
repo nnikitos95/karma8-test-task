@@ -11,12 +11,16 @@ services:
     links:
       - postgres-test
     depends_on:
-      - migration-test
-      - postgres-test
+      migration-test:
+        condition: service_completed_successfully
+      postgres-test:
+        condition: service_healthy
     entrypoint: ["php", "./tests/functional/run.php"]
     environment:
       DB: tests
       DB_HOST: postgres-test
+    networks:
+      - tests
   migration-test:
     build:
       context: .docker
@@ -29,16 +33,28 @@ services:
     links:
       - postgres-test
     depends_on:
-      - postgres-test
+      postgres-test:
+        condition: service_healthy
     entrypoint: ["sh", "-c", "php init-db.php"]
     environment:
       DB: tests
       DB_HOST: postgres-test
+    networks:
+      - tests
   postgres-test:
     image: postgres
     environment:
       POSTGRES_DB: tests
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     ports:
       - '5433:5432'
+    networks:
+      - tests
+networks:
+  tests:
