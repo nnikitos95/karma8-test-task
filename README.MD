@@ -1,3 +1,5 @@
+[![Makefile CI](https://github.com/nnikitos95/karma8-test-task/actions/workflows/makefile.yml/badge.svg?branch=main)](https://github.com/nnikitos95/karma8-test-task/actions/workflows/makefile.yml)
+
 Запуск
 
 Поднять окружение
